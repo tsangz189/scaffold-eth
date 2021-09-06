@@ -6,25 +6,30 @@ const { utils } = require("ethers");
 const R = require("ramda");
 
 const main = async () => {
-
   console.log("\n\n 📡 Deploying...\n");
 
-  const yourToken = await deploy("YourToken")
+  const yourToken = await deploy("YourToken");
 
-  //Todo: deploy the vendor
-  //const vendor = await deploy("Vendor",[ yourToken.address ])
+  // const result = await yourToken.transfer("0x13D3C43C1eeC92961191c5a363Cd166579b67DCD", utils.parseEther("1000"));
+  // Todo: deploy the vendor
+  const vendor = await deploy("Vendor", [yourToken.address]);
 
-  //console.log("\n 🏵  Sending all 1000 tokens to the vendor...\n");
-  //Todo: transfer the tokens to the vendor
-  //const result = await yourToken.transfer( vendor.address, utils.parseEther("1000") );
+  // console.log("\n 🏵  Sending all 1000 tokens to the vendor...\n");
+  // Todo: transfer the tokens to the vendor
+  const result = await yourToken.transfer(
+    vendor.address,
+    utils.parseEther("1000")
+  );
 
-  //const stakerContract = await deploy("Staker",[ exampleExternalContract.address ]) // <-- add in constructor args like line 14 ^^^
+  await vendor.transferOwnership("0x88A687F1fe9c7Dace75201d45772D78C227D5070");
 
-  //console.log("\n 🤹  Sending ownership to frontend address...\n")
-  //ToDo: change address with your burner wallet address vvvv
-  //await vendor.transferOwnership( "0xD75b0609ed51307E13bae0F9394b5f63A7f8b6A1" );
+  // const stakerContract = await deploy("Staker",[ exampleExternalContract.address ]) // <-- add in constructor args like line 14 ^^^
 
-  //const secondContract = await deploy("SecondContract")
+  // console.log("\n 🤹  Sending ownership to frontend address...\n")
+  // ToDo: change address with your burner wallet address vvvv
+  // await vendor.transferOwnership( "0xD75b0609ed51307E13bae0F9394b5f63A7f8b6A1" );
+
+  // const secondContract = await deploy("SecondContract")
 
   // const exampleToken = await deploy("ExampleToken")
   // const examplePriceOracle = await deploy("ExamplePriceOracle")
@@ -61,11 +66,18 @@ const main = async () => {
   );
 };
 
-const deploy = async (contractName, _args = [], overrides = {}, libraries = {}) => {
+const deploy = async (
+  contractName,
+  _args = [],
+  overrides = {},
+  libraries = {}
+) => {
   console.log(` 🛰  Deploying: ${contractName}`);
 
   const contractArgs = _args || [];
-  const contractArtifacts = await ethers.getContractFactory(contractName,{libraries: libraries});
+  const contractArtifacts = await ethers.getContractFactory(contractName, {
+    libraries: libraries,
+  });
   const deployed = await contractArtifacts.deploy(...contractArgs, overrides);
   const encoded = abiEncodeArgs(deployed, contractArgs);
   fs.writeFileSync(`artifacts/${contractName}.address`, deployed.address);
@@ -74,7 +86,7 @@ const deploy = async (contractName, _args = [], overrides = {}, libraries = {}) 
     " 📄",
     chalk.cyan(contractName),
     "deployed to:",
-    chalk.magenta(deployed.address),
+    chalk.magenta(deployed.address)
   );
 
   if (!encoded || encoded.length <= 2) return deployed;
@@ -82,7 +94,6 @@ const deploy = async (contractName, _args = [], overrides = {}, libraries = {}) 
 
   return deployed;
 };
-
 
 // ------ utils -------
 
@@ -107,7 +118,9 @@ const abiEncodeArgs = (deployed, contractArgs) => {
 
 // checks if it is a Solidity file
 const isSolidity = (fileName) =>
-  fileName.indexOf(".sol") >= 0 && fileName.indexOf(".swp") < 0 && fileName.indexOf(".swap") < 0;
+  fileName.indexOf(".sol") >= 0 &&
+  fileName.indexOf(".swp") < 0 &&
+  fileName.indexOf(".swap") < 0;
 
 const readArgsFile = (contractName) => {
   let args = [];
@@ -122,7 +135,7 @@ const readArgsFile = (contractName) => {
 };
 
 function sleep(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 main()

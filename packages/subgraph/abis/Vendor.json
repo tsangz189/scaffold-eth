@@ -22,7 +22,7 @@
       {
         "indexed": false,
         "internalType": "uint256",
-        "name": "amountOfETH",
+        "name": "amountOfEth",
         "type": "uint256"
       },
       {
@@ -55,6 +55,31 @@
     "type": "event"
   },
   {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "seller",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "amouthOfTokens",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "amountOfEth",
+        "type": "uint256"
+      }
+    ],
+    "name": "SellTokens",
+    "type": "event"
+  },
+  {
     "inputs": [],
     "name": "buyTokens",
     "outputs": [],
@@ -77,6 +102,19 @@
   {
     "inputs": [],
     "name": "renounceOwnership",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "sellTokens",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
